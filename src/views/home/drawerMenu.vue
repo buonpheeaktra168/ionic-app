@@ -1,0 +1,62 @@
+<template>
+  <ion-menu :content-id="contentId">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <!-- <ion-list>
+      <ion-item>
+        <ion-label>Pokémon Yellow</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Mega Man X</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>The Legend of Zelda</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Pac-Man</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Super Mario World</ion-label>
+      </ion-item>
+    </ion-list> -->
+    <ion-toolbar>
+      <IonButton>
+        Logout
+      </IonButton>
+    </ion-toolbar>
+  </ion-menu>
+</template>
+
+<script lang="ts">
+// import HeaderCustom from "@/components/HeaderCustom.vue";
+// import ContainerScreen from "@/components/ContainerScreen.vue";
+import {
+  IonMenu,
+  IonToolbar,
+  IonTitle,
+  IonHeader,
+  IonButton,
+//   IonList,
+//   IonItem,
+//   IonLabel,
+} from "@ionic/vue";
+export default {
+  name: "LoginScreen",
+  components: {
+    IonMenu,
+    IonToolbar,
+    IonTitle,
+    IonHeader,
+    IonButton,
+    // IonList,
+    // IonItem,
+    // IonLabel,
+  },
+  props: {
+    contentId: String,
+  },
+};
+</script>

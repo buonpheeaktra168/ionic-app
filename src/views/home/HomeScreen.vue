@@ -1,19 +1,35 @@
 <template>
-  <ContainerScreen>
-    <HeaderCustom title="Home" />
-  </ContainerScreen>
+  <ion-page>
+    <HeaderCustom title="Home" :right-icon="search"  />
+    <ion-content>
+      <div class="example-content">Hi I am HomeScreen</div>
+    </ion-content>
+  </ion-page>
 </template>
-
 <script lang="ts">
-
 import HeaderCustom from "@/components/HeaderCustom.vue";
-import ContainerScreen from "@/components/ContainerScreen.vue";
-export default {
-  name: "LoginScreen",
-  components: {
+import { search } from "ionicons/icons";
 
-    ContainerScreen,
-    HeaderCustom
+import {
+  IonPage,
+  // IonTitle,
+  // IonHeader,
+  // IonToolbar,
+  IonContent,
+} from "@ionic/vue";
+export default {
+  components: {
+    // IonTitle,
+    IonPage,
+    // IonHeader,
+    // IonToolbar,
+    IonContent,
+    HeaderCustom,
+  },
+  data() {
+    return {
+      search,
+    };
   },
 };
 </script>
