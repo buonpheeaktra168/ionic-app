@@ -22,9 +22,10 @@
 </template>
 
 <script lang="ts">
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 import HeaderCustom from "@/components/HeaderCustom.vue";
 import ContainerScreen from "@/components/ContainerScreen.vue";
+import { useStore } from "vuex";
 import {
   IonList,
   IonInput,
@@ -34,7 +35,6 @@ import {
   useIonRouter,
 } from "@ionic/vue";
 export default {
-  name: "LoginScreen",
   components: {
     IonList,
     IonInput,
@@ -45,8 +45,9 @@ export default {
     ContainerScreen,
   },
   setup() {
-    const router = useRouter();
     const ionRouter = useIonRouter();
+    const store = useStore();
+
     const form = {
       username: "",
       password: "",
@@ -55,12 +56,12 @@ export default {
     const onLogin = () => {
       if (form.username == "admin" && form.password == "password") {
         ionRouter.replace({ path: "/home" });
+        store.dispatch("authModules/login", true);
       } else {
         alert("incorrect username or password!");
       }
     };
     return {
-      router,
       form,
       onLogin,
     };

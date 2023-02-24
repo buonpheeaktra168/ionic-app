@@ -5,7 +5,7 @@ import LoginScreen from "@/views/auth/LoginScreen.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: "/login",
+    redirect: "/home",
   },
   {
     path: "/login",
@@ -13,9 +13,30 @@ const routes: Array<RouteRecordRaw> = [
     component: LoginScreen,
   },
   {
-    path: "/home",
-    name: "home",
-    component: () => import("@/views/home/HomeScreen.vue"),
+    path: "/tabs",
+    component: () => import("@/views/bottomTab/BottonTab.vue"),
+    children: [
+      {
+        path: "",
+        redirect: "/home",
+      },
+      {
+        path: "/home",
+        component: () => import("@/views/home/HomeScreen.vue"),
+      },
+      {
+        path: "/book",
+        component: () => import("@/views/books/BookScreen.vue"),
+      },
+      {
+        path: "/video",
+        component: () => import("@/views/videos/VideoScreen.vue"),
+      },
+      {
+        path: "/account",
+        component: () => import("@/views/account/AccountScreen.vue"),
+      },
+    ],
   },
 ];
 
