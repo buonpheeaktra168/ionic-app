@@ -1,18 +1,17 @@
 <template>
   <ion-page>
     <HeaderCustom title="Home" :right-icon="search" />
-    <ion-button id="open-action-sheet">Open</ion-button>
     <ion-content>
       <TodoCard
         v-for="todo in todos"
         :key="todo.id"
         :card-title="todo.title"
         :is-checked="todo.isCompleted"
-        @onDelete="handleDeleteTodo(todo.id)"
+        @onDelete="presentActionSheet(todo.id)"
       />
       <PlusButton @onAdd="onAdd" />
     </ion-content>
-    <ActionSheet trigger="open-action-sheet" />
+    <!-- <ActionSheet @onClick="presentActionSheet" /> -->
   </ion-page>
 </template>
 <script lang="ts">
@@ -25,6 +24,7 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonButton,
+actionSheetController,
 } from "@ionic/vue";
 import { search } from "ionicons/icons";
 import { HeaderCustom } from "@/components";
@@ -42,8 +42,8 @@ export default {
     HeaderCustom,
     TodoCard,
     PlusButton,
-    ActionSheet,
-    IonButton,
+    // ActionSheet,
+    // IonButton,
     // IonRefresher,
     // IonRefresherContent,
   },
@@ -74,6 +74,38 @@ export default {
       store.dispatch("todoModule/deleteTodo", id);
     };
 
+    const presentActionSheet = async (id: number) => {
+
+        const actionSheet = await actionSheetController.create({
+          subHeader: '',
+          buttons: [
+            {
+              text: 'Delete',
+              role: 'destructive',
+              data: {
+                action: 'delete',
+              },
+            },
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              data: {
+                action: 'cancel',
+              },
+            },
+          ],
+        });
+        actionSheet.buttons.map((e:any) => {
+          if(e.data.action ==='delete') {
+            handleDeleteTodo(id);
+          } 
+        })
+        await actionSheet.present();
+
+        const res = await actionSheet.onDidDismiss();
+        
+      };
+
     return {
       store,
       todos,
@@ -81,6 +113,7 @@ export default {
       onRefresh,
       isLoading,
       handleDeleteTodo,
+      presentActionSheet
     };
   },
 };
