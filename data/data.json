@@ -1,12 +1,7 @@
 {
   "todos": [
     {
-      "id": 7,
-      "title": "php",
-      "isCompleted": true
-    },
-    {
-      "id": 8,
+      "id": 2,
       "title": "Java",
       "isCompleted": false
     }
