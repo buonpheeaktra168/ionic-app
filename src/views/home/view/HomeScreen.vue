@@ -1,6 +1,7 @@
 <template>
   <ion-page>
     <HeaderCustom title="Home" :right-icon="search" />
+    <ion-button id="open-action-sheet">Open</ion-button>
     <ion-content>
       <TodoCard
         v-for="todo in todos"
@@ -11,6 +12,7 @@
       />
       <PlusButton @onAdd="onAdd" />
     </ion-content>
+    <ActionSheet trigger="open-action-sheet" />
   </ion-page>
 </template>
 <script lang="ts">
@@ -22,10 +24,16 @@ import {
   modalController,
   IonRefresher,
   IonRefresherContent,
+  IonButton,
 } from "@ionic/vue";
 import { search } from "ionicons/icons";
 import { HeaderCustom } from "@/components";
-import { PlusButton, TodoCard, AddModal } from "@/views/home/components";
+import {
+  PlusButton,
+  TodoCard,
+  AddModal,
+  ActionSheet,
+} from "@/views/home/components";
 
 export default {
   components: {
@@ -34,6 +42,8 @@ export default {
     HeaderCustom,
     TodoCard,
     PlusButton,
+    ActionSheet,
+    IonButton,
     // IonRefresher,
     // IonRefresherContent,
   },
