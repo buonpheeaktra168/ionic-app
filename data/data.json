@@ -1,9 +1,14 @@
 {
-  "user": [
+  "todos": [
     {
-      "id": "a01",
-      "username": "admin",
-      "password": "password"
+      "id": 7,
+      "title": "php",
+      "isCompleted": true
+    },
+    {
+      "id": 8,
+      "title": "Java",
+      "isCompleted": false
     }
   ]
 }

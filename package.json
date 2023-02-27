@@ -8,7 +8,8 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "android": "ionic capacitor run android"
+    "android": "ionic capacitor run android",
+    "json-server": "json-server --w data/data.json"
   },
   "dependencies": {
     "@capacitor/android": "4.7.0",
