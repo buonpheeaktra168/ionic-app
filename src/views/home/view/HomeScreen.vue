@@ -1,39 +1,35 @@
 <template>
   <ion-page>
     <HeaderCustom title="Home" :right-icon="search" />
-    <ion-content>
+    <ion-content color="medium" :force-overscroll="true">
       <TodoCard
-        v-for="todo in todos"
-        :key="todo.id"
+        v-for="(todo, index) in todos"
+        :key="index"
+        :id="todo.id"
         :card-title="todo.title"
-        :is-checked="todo.isCompleted"
+        :value="todo.isCompleted"
         @onDelete="presentActionSheet(todo.id)"
+        @onEdit="handleEdit(todo)"
+        @onChange="handleTick(todo)"
       />
       <PlusButton @onAdd="onAdd" />
     </ion-content>
-    <!-- <ActionSheet @onClick="presentActionSheet" /> -->
   </ion-page>
 </template>
 <script lang="ts">
 import { useStore } from "vuex";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import {
   IonPage,
   IonContent,
   modalController,
-  IonRefresher,
-  IonRefresherContent,
-  IonButton,
-actionSheetController,
+  actionSheetController,
+  loadingController,
 } from "@ionic/vue";
 import { search } from "ionicons/icons";
 import { HeaderCustom } from "@/components";
-import {
-  PlusButton,
-  TodoCard,
-  AddModal,
-  ActionSheet,
-} from "@/views/home/components";
+import { PlusButton, TodoCard, AddModal } from "@/views/home/components";
+import type { Todos } from "@/store/modules/todoModule/todo.interface";
 
 export default {
   components: {
@@ -42,10 +38,6 @@ export default {
     HeaderCustom,
     TodoCard,
     PlusButton,
-    // ActionSheet,
-    // IonButton,
-    // IonRefresher,
-    // IonRefresherContent,
   },
   data() {
     return {
@@ -55,56 +47,57 @@ export default {
 
   setup() {
     const store = useStore();
+    const isChange = ref(false);
     onMounted(() => store.dispatch("todoModule/fetchTodos"));
     const todos = computed(() => store.getters["todoModule/getTodos"]);
     const isLoading = computed(() => store.getters["todoModule/isLoading"]);
 
     const onAdd = async () => {
+      store.dispatch("todoModule/isAdd", true);
       const modal = await modalController.create({
         component: AddModal,
       });
       modal.present();
+      
     };
 
     const onRefresh = () => {
       store.dispatch("todoModule/fetchTodos");
     };
 
-    const handleDeleteTodo = (id: number) => {
-      store.dispatch("todoModule/deleteTodo", id);
+    const presentActionSheet = async (id: number) => {
+      const actionSheet = await actionSheetController.create({
+        subHeader: "",
+        buttons: [
+          {
+            text: "Delete",
+            role: "destructive",
+            handler: () => {
+              store.dispatch("todoModule/deleteTodo", id);
+            },
+          },
+          {
+            text: "Cancel",
+            role: "cancel",
+          },
+        ],
+      });
+
+      await actionSheet.present();
     };
 
-    const presentActionSheet = async (id: number) => {
+    const handleEdit = async (data: Todos) => {
+      store.dispatch("todoModule/isUpdate", data);
+      const modal = await modalController.create({
+        component: AddModal,
+      });
+      modal.present();
+    };
 
-        const actionSheet = await actionSheetController.create({
-          subHeader: '',
-          buttons: [
-            {
-              text: 'Delete',
-              role: 'destructive',
-              data: {
-                action: 'delete',
-              },
-            },
-            {
-              text: 'Cancel',
-              role: 'cancel',
-              data: {
-                action: 'cancel',
-              },
-            },
-          ],
-        });
-        actionSheet.buttons.map((e:any) => {
-          if(e.data.action ==='delete') {
-            handleDeleteTodo(id);
-          } 
-        })
-        await actionSheet.present();
-
-        const res = await actionSheet.onDidDismiss();
-        
-      };
+    const handleTick = (todo: Todos) => {
+      todo.isCompleted = !todo.isCompleted;
+      store.dispatch("todoModule/updateTodo", todo);
+    };
 
     return {
       store,
@@ -112,8 +105,10 @@ export default {
       onAdd,
       onRefresh,
       isLoading,
-      handleDeleteTodo,
-      presentActionSheet
+      presentActionSheet,
+      handleEdit,
+      isChange,
+      handleTick,
     };
   },
 };

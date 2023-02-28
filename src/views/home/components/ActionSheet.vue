@@ -1,17 +1,3 @@
-<style>
-  /* .container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    flex-direction: column;
-  } */
-
-  code {
-    white-space: pre-wrap;
-  }
-</style>
-
 <template>
   <div class="container">
     <ion-button @click="$emit('onClick')">Open</ion-button>
