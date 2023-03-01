@@ -109,7 +109,7 @@ export default {
       handleEdit,
       isChange,
       handleTick,
-    };
+     };
   },
 };
 </script>
