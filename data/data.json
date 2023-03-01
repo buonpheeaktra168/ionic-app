@@ -2,8 +2,8 @@
   "todos": [
     {
       "id": 1,
-      "title": "Vue 3 Piniass",
-      "isCompleted": true
+      "title": "Vue 3 Piniaxscd",
+      "isCompleted": false
     },
     {
       "id": 10,
@@ -13,7 +13,7 @@
     {
       "id": 7,
       "title": "Pythondscx",
-      "isCompleted": true
+      "isCompleted": false
     },
     {
       "id": 6,
@@ -23,25 +23,16 @@
     {
       "id": 8,
       "title": "TypeScript2022",
-      "isCompleted": false
+      "isCompleted": true
     },
     {
       "id": 11,
       "title": "Vue 3 ",
-      "isCompleted": true
+      "isCompleted": false
     },
     {
       "id": 5,
-      "title": "JavaScrip",
-      "isCompleted": true
-    },
-    {
-      "id": 3,
-      "title": "asdcx"
-    },
-    {
-      "id": 9,
-      "title": "cz x",
+      "title": "JavaScript cs7",
       "isCompleted": true
     }
   ]
