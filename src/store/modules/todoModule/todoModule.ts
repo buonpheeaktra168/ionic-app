@@ -1,7 +1,10 @@
 import { Todos } from "./todo.interface";
 
+const localAPI = process.env.VUE_APP_LOCAL_API;
+
 const state = {
   todo: [] as Todos[],
+  tmpTodo: [] as Todos[],
   isLoading: false,
   isAddTodo: false,
   isUpdateTodo: {} as Todos,
@@ -18,9 +21,12 @@ const actions = {
   async fetchTodos({ commit }: any) {
     try {
       state.isLoading = true;
-      await fetch("http://localhost:8081/todos")
+      await fetch(localAPI)
         .then((res) => res.json())
-        .then((data: Todos) => commit("GET_TODOS", data));
+        .then((data: Todos[]) => {
+          data.forEach((item: Todos) => state.tmpTodo.push(item));
+          commit("GET_TODOS", data);
+        });
       state.isLoading = false;
     } catch (error) {
       console.log(error);
@@ -41,7 +47,7 @@ const actions = {
       }),
     };
     try {
-      await fetch("http://localhost:8081/todos", requestOptions)
+      await fetch(localAPI, requestOptions)
         .then((res) => res.json())
         .then((data) => {
           commit("ADD_TODO", data);
@@ -53,9 +59,8 @@ const actions = {
   },
 
   async deleteTodo({ commit }: any, id: number) {
-    console.log(id);
     try {
-      await fetch(`http://localhost:8081/todos/${id}`, {
+      await fetch(`${localAPI}/${id}`, {
         method: "DELETE",
       }).then(() => commit("DELETE_TODO", id));
     } catch (error) {
@@ -77,12 +82,16 @@ const actions = {
       }),
     };
     try {
-      await fetch(`http://localhost:8081/todos/${data.id}`, requestOptions)
+      await fetch(`${localAPI}/${data.id}`, requestOptions)
         .then((res) => res.json())
         .then((data) => commit("UPDATE_TODO", data));
     } catch (error) {
       console.log(error);
     }
+  },
+
+  async searchTodos({ commit }: any, value: Todos) {
+    await commit("SEARCH_TODO", value);
   },
 
   isAdd({ commit }: any, add: boolean) {
@@ -111,6 +120,16 @@ const mutations = {
     state.todo = data;
   },
 
+  SEARCH_TODO: (state: any, value: Todos) => {
+    const res = state.tmpTodo.filter((item: Todos) => {
+      if (value.title) {
+        return item.title.toLowerCase().includes(value.title.toLowerCase());
+      }
+    });
+
+    state.todo = res;
+  },
+
   IS_ADD: (state: any, add: boolean) => {
     state.isAdd = add;
   },
@@ -125,4 +144,5 @@ export default {
   getters,
   actions,
   mutations,
+  localAPI,
 };

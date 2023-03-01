@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <HeaderCustom title="Home" :right-icon="search" />
+    <HeaderCustom title="Home" :right-icon="search" search-id="search-modal" />
     <ion-content color="medium" :force-overscroll="true">
       <TodoCard
         v-for="(todo, index) in todos"
@@ -8,40 +8,58 @@
         :id="todo.id"
         :card-title="todo.title"
         :value="todo.isCompleted"
+        :icon-delete="trashBinOutline"
+        :icon-edit="pencilOutline"
         @onDelete="presentActionSheet(todo.id)"
         @onEdit="handleEdit(todo)"
         @onChange="handleTick(todo)"
       />
-      <PlusButton @onAdd="onAdd" />
+      <SheetModal trigger="search-modal" />
+      <PlusButton
+        horizontal="end"
+        vertical="bottom"
+        @onClick="onAdd"
+        :icon="add"
+      />
     </ion-content>
   </ion-page>
 </template>
 <script lang="ts">
 import { useStore } from "vuex";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, defineComponent, watchEffect } from "vue";
+import { trashBinOutline, pencilOutline, search, add } from "ionicons/icons";
 import {
   IonPage,
   IonContent,
   modalController,
   actionSheetController,
-  loadingController,
 } from "@ionic/vue";
-import { search } from "ionicons/icons";
 import { HeaderCustom } from "@/components";
-import { PlusButton, TodoCard, AddModal } from "@/views/home/components";
+import {
+  PlusButton,
+  TodoCard,
+  AddModal,
+  SheetModal,
+  TickMarkButton
+} from "@/views/home/components";
 import type { Todos } from "@/store/modules/todoModule/todo.interface";
 
-export default {
+export default defineComponent({
   components: {
     IonPage,
     IonContent,
     HeaderCustom,
     TodoCard,
     PlusButton,
+    SheetModal,
+    // TickMarkButton
   },
   data() {
     return {
       search,
+      trashBinOutline,
+      pencilOutline,
+      add,
     };
   },
 
@@ -52,13 +70,14 @@ export default {
     const todos = computed(() => store.getters["todoModule/getTodos"]);
     const isLoading = computed(() => store.getters["todoModule/isLoading"]);
 
+    console.log(todos.value);
+
     const onAdd = async () => {
       store.dispatch("todoModule/isAdd", true);
       const modal = await modalController.create({
         component: AddModal,
       });
       modal.present();
-      
     };
 
     const onRefresh = () => {
@@ -96,20 +115,30 @@ export default {
 
     const handleTick = (todo: Todos) => {
       todo.isCompleted = !todo.isCompleted;
-      store.dispatch("todoModule/updateTodo", todo);
+      // store.dispatch("todoModule/updateTodo", todo);
     };
+
+    watchEffect(() => {
+      if (
+        todos.value.isCompleted !== todos.value.isCompleted ||
+        todos.value.title !== todos.value.title
+      ) {
+        computed(() => store.getters["todoModule/getTodos"]);
+        onMounted(() => store.dispatch("todoModule/fetchTodos"));
+      }
+    });
 
     return {
       store,
       todos,
+      isLoading,
+      isChange,
       onAdd,
       onRefresh,
-      isLoading,
       presentActionSheet,
       handleEdit,
-      isChange,
       handleTick,
     };
   },
-};
+});
 </script>

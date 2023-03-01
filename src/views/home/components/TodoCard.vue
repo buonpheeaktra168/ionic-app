@@ -3,6 +3,7 @@
     <ion-card-header>
       <ion-item>
         <ion-checkbox
+          v-if="id"
           slot="start"
           :id="id"
           :checked="value"
@@ -11,12 +12,13 @@
         <ion-label :class="value ? 'hr-lines' : null">{{
           cardTitle
         }}</ion-label>
-        <ion-button color="danger" @click="$emit('onDelete')">
-          <ion-icon :icon="trashBinOutline"></ion-icon>
+        <ion-button v-if="iconDelete" color="danger" @click="$emit('onDelete')">
+          <ion-icon :icon="iconDelete"></ion-icon>
         </ion-button>
-        <ion-button @click="$emit('onEdit')">
-          <ion-icon :icon="pencilOutline"></ion-icon>
+        <ion-button v-if="iconEdit" @click="$emit('onEdit')">
+          <ion-icon :icon="iconEdit"></ion-icon>
         </ion-button>
+        <slot />
       </ion-item>
     </ion-card-header>
   </ion-card>
@@ -32,7 +34,6 @@ import {
   IonIcon,
   IonButton,
 } from "@ionic/vue";
-import { trashBinOutline, pencilOutline } from "ionicons/icons";
 
 export default {
   name: "TodoCard",
@@ -50,12 +51,8 @@ export default {
     cardSubtitle: String,
     value: Boolean,
     id: Number,
-  },
-  data() {
-    return {
-      trashBinOutline,
-      pencilOutline,
-    };
+    iconDelete: String,
+    iconEdit: String,
   },
 };
 </script>

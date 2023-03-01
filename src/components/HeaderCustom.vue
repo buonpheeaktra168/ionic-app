@@ -9,7 +9,9 @@
       </ion-buttons>
       <ion-title>{{ title }}</ion-title>
       <ion-buttons v-if="rightIcon" slot="end">
-        <ion-icon :icon="rightIcon" size="large" />
+        <IonButton :id="searchId" @click="$emit('onClick')">
+          <ion-icon :icon="rightIcon" size="large" />
+        </IonButton>
       </ion-buttons>
       <slot />
     </ion-toolbar>
@@ -24,6 +26,7 @@ import {
   IonBackButton,
   IonTitle,
   IonIcon,
+  IonButton,
 } from "@ionic/vue";
 export default {
   components: {
@@ -33,6 +36,7 @@ export default {
     IonBackButton,
     IonTitle,
     IonIcon,
+    IonButton,
   },
 
   props: {
@@ -40,6 +44,7 @@ export default {
     defaultBack: String,
     rightIcon: String,
     iconSize: String,
+    searchId: String,
   },
 };
 </script>
