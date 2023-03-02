@@ -17,12 +17,23 @@
       <ion-label position="stacked">Todo title</ion-label>
       <ion-input v-model="data.title" placeholder="Your todo"></ion-input>
     </ion-item>
+    <ion-item>
+      <ion-select placeholder="Select Status" interface="action-sheet">
+        <ion-select-option
+          v-for="e in status"
+          :key="e.key"
+          :value="e.isCompleted"
+          v-model="data.isCompleted"
+          >{{ e.label }}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
   </ion-content>
 </template>
 
 <script lang="ts">
 import { Todos } from "@/store/modules/todoModule/todo.interface";
-import { loadingController } from "@ionic/core";
+import { statusValue } from "./OptionValue";
 import {
   IonContent,
   IonHeader,
@@ -34,6 +45,8 @@ import {
   IonLabel,
   IonInput,
   modalController,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/vue";
 import { defineComponent, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
@@ -50,14 +63,16 @@ export default defineComponent({
     IonItem,
     IonLabel,
     IonInput,
+    IonSelect,
+    IonSelectOption,
   },
 
   setup() {
     const store = useStore();
     const isAdd = computed(() => store.getters["todoModule/isAdd"]);
     const isUpdate = computed(() => store.getters["todoModule/getUpdate"]);
-    const isLoading = computed(() => store.getters["todoModule/getLoadong"]);
 
+    const status = statusValue;
     const data = ref<Todos>({
       id: "",
       title: "",
@@ -93,7 +108,22 @@ export default defineComponent({
       confirm,
       data,
       isAdd,
+      status,
     };
   },
 });
 </script>
+
+<style scoped>
+.completed-status {
+  color: rgb(0, 100, 250);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.incompleted-status {
+  color: rgb(255, 0, 0);
+  font-size: 12px;
+  font-weight: bold;
+}
+</style>
