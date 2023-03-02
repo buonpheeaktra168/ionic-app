@@ -138,7 +138,7 @@ export default defineComponent({
       presentActionSheet,
       handleEdit,
       handleTick,
-    };
+     };
   },
 });
 </script>
