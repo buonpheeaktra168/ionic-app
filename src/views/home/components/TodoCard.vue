@@ -50,7 +50,7 @@ export default {
     cardTitle: String,
     cardSubtitle: String,
     value: Boolean,
-    id: Number,
+    id: String,
     iconDelete: String,
     iconEdit: String,
   },

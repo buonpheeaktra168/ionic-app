@@ -11,6 +11,7 @@
         @click="$refs.modal.$el.setCurrentBreakpoint(1)"
         placeholder="Search"
       ></ion-searchbar>
+      
       <TodoCard
         v-for="(todo, index) in todos"
         :key="index"
