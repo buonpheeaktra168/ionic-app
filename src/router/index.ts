@@ -5,7 +5,7 @@ import LoginScreen from "@/views/auth/LoginScreen.vue";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: "/home",
+    redirect: "/login",
   },
   {
     path: "/login",
