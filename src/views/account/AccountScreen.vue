@@ -5,13 +5,23 @@
         <ion-title>Account</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content  :scroll-events="false">
+    <ion-content :scroll-events="false">
+      <div class="profile">
+        <ion-img
+          
+          src="https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg"
+          alt="The Wisconsin State Capitol building in Madison, WI at night"
+        ></ion-img>
+      </div>
+
       <div class="example-content">Account Screen</div>
     </ion-content>
+    <ion-button>Sign Out</ion-button>
   </ion-page>
 </template>
 
 <script lang="ts">
+import { IonButton, IonImg } from "@ionic/vue";
 import {
   IonTitle,
   IonPage,
@@ -26,6 +36,18 @@ export default {
     IonHeader,
     IonToolbar,
     IonContent,
+    IonButton,
+    IonImg,
   },
 };
 </script>
+
+<style scoped>
+.profile {
+  display: flex;
+  width: 120px;
+  height: 120px;
+  border-radius: 60px;
+  overflow: hidden;
+}
+</style>

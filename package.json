@@ -21,6 +21,7 @@
     "@ionic/vue": "^6.0.0",
     "@ionic/vue-router": "^6.0.0",
     "core-js": "^3.6.5",
+    "firebase": "^9.17.2",
     "ionicons": "^6.0.3",
     "json-server": "^0.17.2",
     "vue": "^3.2.21",
