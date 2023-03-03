@@ -1,42 +1,14 @@
 {
   "todos": [
     {
-      "id": 1,
-      "title": "Vue 3 Piniaxscd",
-      "isCompleted": false
-    },
-    {
-      "id": 10,
-      "title": "Vuex4",
+      "id": "les5qwuw",
+      "title": "TypeScript",
       "isCompleted": true
     },
     {
-      "id": 7,
-      "title": "Pythondscx",
-      "isCompleted": false
-    },
-    {
-      "id": 6,
-      "title": "JavaScript",
+      "id": "les5r7ni",
+      "title": "MySql",
       "isCompleted": true
-    },
-    {
-      "id": 11,
-      "title": "Vue 3 ",
-      "isCompleted": false
-    },
-    {
-      "id": 5,
-      "title": "JavaScript cs7",
-      "isCompleted": true
-    },
-    {
-      "id": 4,
-      "title": "czxv"
-    },
-    {
-      "id": 8,
-      "title": "sacdc"
     }
   ]
 }

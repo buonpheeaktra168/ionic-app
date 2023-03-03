@@ -2,6 +2,16 @@
   <ion-page>
     <HeaderCustom title="Home" :right-icon="search" search-id="search-modal" />
     <ion-content color="medium" :force-overscroll="true">
+      <div class="card">
+        <CardView
+          :title="counter.counterCompleted.toString()"
+          subtitle="Completed"
+        />
+        <CardView
+          :title="counter.counterIncompleted.toString()"
+          subtitle="InCompleted"
+        />
+      </div>
       <TodoCard
         v-for="(todo, index) in todos"
         :key="index"
@@ -40,7 +50,7 @@ import {
   TodoCard,
   AddModal,
   SheetModal,
-  TickMarkButton
+  CardView,
 } from "@/views/home/components";
 import type { Todos } from "@/store/modules/todoModule/todo.interface";
 
@@ -52,7 +62,7 @@ export default defineComponent({
     TodoCard,
     PlusButton,
     SheetModal,
-    // TickMarkButton
+    CardView,
   },
   data() {
     return {
@@ -66,11 +76,23 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const isChange = ref(false);
-    onMounted(() => store.dispatch("todoModule/fetchTodos"));
+    store.dispatch("todoModule/fetchTodos").then(() => countCompleted());
     const todos = computed(() => store.getters["todoModule/getTodos"]);
     const isLoading = computed(() => store.getters["todoModule/isLoading"]);
 
-    console.log(todos.value);
+    const counter = ref({
+      counterCompleted: 0,
+      counterIncompleted: 0,
+    });
+    const countCompleted = () => {
+      todos.value.forEach((element: Todos) => {
+        if (element.isCompleted == true) {
+          return counter.value.counterCompleted++;
+        } else if (element.isCompleted == false) {
+          return counter.value.counterIncompleted++;
+        }
+      });
+    };
 
     const onAdd = async () => {
       store.dispatch("todoModule/isAdd", true);
@@ -84,7 +106,7 @@ export default defineComponent({
       store.dispatch("todoModule/fetchTodos");
     };
 
-    const presentActionSheet = async (id: number) => {
+    const presentActionSheet = async (id: string) => {
       const actionSheet = await actionSheetController.create({
         subHeader: "",
         buttons: [
@@ -115,7 +137,7 @@ export default defineComponent({
 
     const handleTick = (todo: Todos) => {
       todo.isCompleted = !todo.isCompleted;
-      // store.dispatch("todoModule/updateTodo", todo);
+      store.dispatch("todoModule/updateTodo", todo);
     };
 
     watchEffect(() => {
@@ -123,9 +145,11 @@ export default defineComponent({
         todos.value.isCompleted !== todos.value.isCompleted ||
         todos.value.title !== todos.value.title
       ) {
-        computed(() => store.getters["todoModule/getTodos"]);
+        // computed(() => store.getters["todoModule/getTodos"]);
+        store.getters["todoModule/getTodos"];
         onMounted(() => store.dispatch("todoModule/fetchTodos"));
       }
+      countCompleted;
     });
 
     return {
@@ -133,12 +157,21 @@ export default defineComponent({
       todos,
       isLoading,
       isChange,
+      counter,
+      countCompleted,
       onAdd,
       onRefresh,
       presentActionSheet,
       handleEdit,
       handleTick,
-     };
+    };
   },
 });
 </script>
+
+<style scoped>
+.card {
+  display: flex;
+  flex-direction: row;
+}
+</style>

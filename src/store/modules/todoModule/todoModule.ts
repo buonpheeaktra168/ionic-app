@@ -5,6 +5,7 @@ const localAPI = process.env.VUE_APP_LOCAL_API;
 const state = {
   todo: [] as Todos[],
   tmpTodo: [] as Todos[],
+  todoCompleted: [] as Todos[],
   isLoading: false,
   isAddTodo: false,
   isUpdateTodo: {} as Todos,
@@ -15,6 +16,9 @@ const getters = {
   getLoading: (state: any) => state.isLoading,
   isAdd: (state: any) => state.isAdd,
   getUpdate: (state: any) => state.isUpdateTodo,
+  getCompleted: (state: any) => {
+    state.todoCompleted, console.log(state.todoCompleted);
+  },
 };
 
 const actions = {
@@ -25,6 +29,11 @@ const actions = {
         .then((res) => res.json())
         .then((data: Todos[]) => {
           data.forEach((item: Todos) => state.tmpTodo.push(item));
+          data.filter((e: any) => {
+            if (e.isCompleted == true) {
+              return state.todoCompleted.push(e.isCompleted);
+            }
+          });
           commit("GET_TODOS", data);
         });
       state.isLoading = false;
@@ -34,7 +43,7 @@ const actions = {
   },
 
   async addTodo({ commit }: any, data: Todos) {
-    const id = Math.floor(Math.random() * 11);
+    const id = new Date().getTime().toString(36);
     const requestOptions = {
       method: "POST",
       headers: {
@@ -43,7 +52,7 @@ const actions = {
       body: JSON.stringify({
         id: id,
         title: data.title,
-        isCompleted: data.isCompleted,
+        isCompleted: false,
       }),
     };
     try {
@@ -58,7 +67,7 @@ const actions = {
     }
   },
 
-  async deleteTodo({ commit }: any, id: number) {
+  async deleteTodo({ commit }: any, id: string) {
     try {
       await fetch(`${localAPI}/${id}`, {
         method: "DELETE",
@@ -112,7 +121,7 @@ const mutations = {
     state.todo.push(data);
   },
 
-  DELETE_TODO: (state: any, id: number) => {
+  DELETE_TODO: (state: any, id: string) => {
     state.todo = state.todo.filter((e: Todos) => e.id !== id);
   },
 

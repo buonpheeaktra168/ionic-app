@@ -4,7 +4,7 @@
       <ion-buttons slot="start">
         <ion-back-button
           v-if="defaultBack"
-          :defaultHref="defaultBack"
+        :defaultHref="defaultBack"
         ></ion-back-button>
       </ion-buttons>
       <ion-title>{{ title }}</ion-title>

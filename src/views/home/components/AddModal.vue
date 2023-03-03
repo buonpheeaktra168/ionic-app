@@ -17,17 +17,6 @@
       <ion-label position="stacked">Todo title</ion-label>
       <ion-input v-model="data.title" placeholder="Your todo"></ion-input>
     </ion-item>
-    <ion-item>
-      <ion-select placeholder="Select Status" interface="action-sheet">
-        <ion-select-option
-          v-for="e in status"
-          :key="e.key"
-          :value="e.isCompleted"
-          v-model="data.isCompleted"
-          >{{ e.label }}</ion-select-option
-        >
-      </ion-select>
-    </ion-item>
   </ion-content>
 </template>
 
@@ -45,8 +34,6 @@ import {
   IonLabel,
   IonInput,
   modalController,
-  IonSelect,
-  IonSelectOption,
 } from "@ionic/vue";
 import { defineComponent, ref, computed, watchEffect } from "vue";
 import { useStore } from "vuex";
@@ -63,8 +50,6 @@ export default defineComponent({
     IonItem,
     IonLabel,
     IonInput,
-    IonSelect,
-    IonSelectOption,
   },
 
   setup() {
