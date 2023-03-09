@@ -24,7 +24,7 @@ const getters = {
 const actions = {
   async fetchTodos({ commit }: any) {
     try {
-      state.isLoading = true;
+      // commit("LOADINGsTATUS", true);
       await fetch(localAPI)
         .then((res) => res.json())
         .then((data: Todos[]) => {
@@ -35,8 +35,8 @@ const actions = {
             }
           });
           commit("GET_TODOS", data);
+          // commit("LOADINGsTATUS", false);
         });
-      state.isLoading = false;
     } catch (error) {
       console.log(error);
     }
@@ -116,7 +116,10 @@ const mutations = {
   GET_TODOS: (state: any, data: Todos) => {
     state.todo = data;
   },
-
+  // LOADINGsTATUS: (state: any, newLoadingStatus: boolean) => {
+  //   state.isLoading = newLoadingStatus;
+  //   console.log(state.isLoading);
+  // },
   ADD_TODO: (state: any, data: Todos) => {
     state.todo.push(data);
   },

@@ -2,7 +2,10 @@
   <ion-page>
     <HeaderCustom title="Home" :right-icon="search" search-id="search-modal" />
     <ion-content color="medium" :force-overscroll="true">
-      <div class="card">
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
+        <!-- <ion-refresher-content></ion-refresher-content> -->
+      </ion-refresher>
+      <!-- <div class="card">
         <CardView
           :title="counter.counterCompleted.toString()"
           subtitle="Completed"
@@ -11,7 +14,7 @@
           :title="counter.counterIncompleted.toString()"
           subtitle="InCompleted"
         />
-      </div>
+      </div> -->
       <TodoCard
         v-for="(todo, index) in todos"
         :key="index"
@@ -43,6 +46,8 @@ import {
   IonContent,
   modalController,
   actionSheetController,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/vue";
 import { HeaderCustom } from "@/components";
 import {
@@ -62,7 +67,9 @@ export default defineComponent({
     TodoCard,
     PlusButton,
     SheetModal,
-    CardView,
+    // CardView,
+    IonRefresher,
+    // IonRefresherContent,
   },
   data() {
     return {
@@ -79,6 +86,9 @@ export default defineComponent({
     store.dispatch("todoModule/fetchTodos").then(() => countCompleted());
     const todos = computed(() => store.getters["todoModule/getTodos"]);
     const isLoading = computed(() => store.getters["todoModule/isLoading"]);
+    const user = computed(() => store.getters["authModules/user"]);
+    console.log(user.value);
+    // console.log(isLoading.value);
 
     const counter = ref({
       counterCompleted: 0,
@@ -92,6 +102,12 @@ export default defineComponent({
           return counter.value.counterIncompleted++;
         }
       });
+    };
+
+    const handleRefresh = () => {
+      setTimeout(() => {
+        store.dispatch("todoModule/fetchTodos").then(() => countCompleted());
+      }, 2000);
     };
 
     const onAdd = async () => {
@@ -164,6 +180,7 @@ export default defineComponent({
       presentActionSheet,
       handleEdit,
       handleTick,
+      handleRefresh,
     };
   },
 });
