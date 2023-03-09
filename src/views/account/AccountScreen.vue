@@ -8,12 +8,10 @@
     <ion-content :scroll-events="false">
       <div class="profile">
         <ion-img
-          
           src="https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg"
           alt="The Wisconsin State Capitol building in Madison, WI at night"
         ></ion-img>
       </div>
-
       <div class="example-content">Account Screen</div>
     </ion-content>
     <ion-button>Sign Out</ion-button>
@@ -29,6 +27,8 @@ import {
   IonToolbar,
   IonContent,
 } from "@ionic/vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
 export default {
   components: {
     IonTitle,
@@ -38,6 +38,14 @@ export default {
     IonContent,
     IonButton,
     IonImg,
+  },
+  setup() {
+    const store = useStore();
+
+    computed(() => store.dispatch("authModules/fetchUser"));
+    const userInfo = computed(() => store.getters["authModules/user"]);
+    console.log(userInfo.value)
+    return { userInfo };
   },
 };
 </script>

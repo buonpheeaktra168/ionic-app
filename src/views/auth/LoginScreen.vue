@@ -4,19 +4,23 @@
     <ion-content class="content">
       <ion-list>
         <ion-item>
-          <ion-input placeholder="username" v-model="form.username"></ion-input>
+          <ion-input placeholder="Email" v-model="user.email"></ion-input>
         </ion-item>
         <ion-item>
           <ion-input
             placeholder="password"
             type="password"
-            v-model="form.password"
+            v-model="user.password"
           ></ion-input>
         </ion-item>
       </ion-list>
+      <p v-if="errMsg">{{ errMsg }}</p>
     </ion-content>
     <ion-button @click="onLogin" style="width: 100vw; height: 40px"
-      >Login</ion-button
+      >SignIn</ion-button
+    >
+    <ion-button @click="signUpWithEmail" style="width: 100vw; height: 40px"
+      >SigUp with email</ion-button
     >
   </container-screen>
 </template>
@@ -26,6 +30,7 @@
 import HeaderCustom from "@/components/HeaderCustom.vue";
 import ContainerScreen from "@/components/ContainerScreen.vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import {
   IonList,
   IonInput,
@@ -34,6 +39,9 @@ import {
   IonButton,
   useIonRouter,
 } from "@ionic/vue";
+import { Toast } from "@capacitor/toast";
+import { USERS } from "./auth.interface";
+import { ref } from "vue";
 export default {
   components: {
     IonList,
@@ -46,24 +54,45 @@ export default {
   },
   setup() {
     const ionRouter = useIonRouter();
+    const router = useRouter();
     const store = useStore();
 
-    const form = {
-      username: "",
+    const user = ref<USERS>({
+      email: "",
       password: "",
-    };
+    });
+    const errMsg = ref("");
 
-    const onLogin = () => {
-      if (form.username == "admin" && form.password == "password") {
-        ionRouter.replace({ path: "/home" });
-        store.dispatch("authModules/login", true);
-      } else {
-        alert("incorrect username or password!");
+    const onLogin = async () => {
+      try {
+        await store.dispatch("authModules/signIn", user.value);
+        router.replace("/home");
+      } catch (error: any) {
+        switch (error.code) {
+          case "auth/invalid-email":
+            errMsg.value = "Invalid email";
+            break;
+          case "auth/user-not-found":
+            errMsg.value = "No account with that email was found";
+            break;
+          case "auth/wrong-password":
+            errMsg.value = "Incorrect password";
+            break;
+          default:
+            errMsg.value = "Email or password was incorrect";
+            break;
+        }
       }
     };
+
+    const signUpWithEmail = () => {
+      ionRouter.navigate("/register");
+    };
     return {
-      form,
+      user,
+      errMsg,
       onLogin,
+      signUpWithEmail,
     };
   },
 };

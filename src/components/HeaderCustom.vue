@@ -1,10 +1,11 @@
 <template>
-  <IonHeader>
+  <IonHeader mode="ios" collapse="condense">
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-back-button
+          mode="ios"
           v-if="defaultBack"
-        :defaultHref="defaultBack"
+          :defaultHref="defaultBack"
         ></ion-back-button>
       </ion-buttons>
       <ion-title>{{ title }}</ion-title>

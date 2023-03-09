@@ -1,11 +1,6 @@
 {
   "todos": [
     {
-      "id": "les5qwuw",
-      "title": "TypeScript",
-      "isCompleted": true
-    },
-    {
       "id": "les5r7ni",
       "title": "MySql",
       "isCompleted": true
