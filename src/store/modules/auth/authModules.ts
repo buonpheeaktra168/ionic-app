@@ -46,6 +46,7 @@ const actions = {
     if (response) {
       context.commit("SET_USER", response.user);
     } else {
+      LoadingSpinner.dismiss();
       throw new Error("login failed");
     }
     LoadingSpinner.dismiss();
@@ -61,11 +62,12 @@ const actions = {
       });
   },
 
-  async signOutUser(context: any, payload: boolean) {
+  async signOutUser(context: any) {
     await LoadingSpinner.present();
     try {
       await signOut(auth);
-      context.commit("SET_USER", false);
+      context.commit("SET_IS_AUTH", false);
+      context.commit("SET_USER", null);
     } catch (error) {
       console.log(error);
     }
@@ -87,7 +89,7 @@ const mutations = {
   },
   SET_IS_AUTH(state: any, payload: boolean) {
     state.isAuth = payload;
-    console.log(payload);
+    console.log("isAuth:", payload);
   },
 };
 

@@ -1,6 +1,6 @@
 <template>
-  <IonHeader mode="ios" collapse="condense">
-    <ion-toolbar>
+  <IonHeader  mode="ios" collapse="condense">
+    <ion-toolbar class="header">
       <ion-buttons slot="start">
         <ion-back-button
           mode="ios"
@@ -11,7 +11,7 @@
       <ion-title>{{ title }}</ion-title>
       <ion-buttons v-if="rightIcon" slot="end">
         <IonButton :id="searchId" @click="$emit('onClick')">
-          <ion-icon :icon="rightIcon" size="large" />
+          <ion-icon :icon="rightIcon" size="medium" />
         </IonButton>
       </ion-buttons>
       <slot />
@@ -49,3 +49,4 @@ export default {
   },
 };
 </script>
+

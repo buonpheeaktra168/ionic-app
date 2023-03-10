@@ -1,54 +1,63 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Account</ion-title>
-      </ion-toolbar>
-    </ion-header>
+  <container-screen>
+    <header-custom title="Profile" :right-icon="createOutline" />
     <ion-content :scroll-events="false">
-      <div class="profile">
-        <ion-img
-          src="https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg"
-          alt="The Wisconsin State Capitol building in Madison, WI at night"
-        ></ion-img>
-      </div>
-      <div class="example-content">Account Screen</div>
-      {{ isAuth }}
-      {{ user }}
+      <ion-list v-if="isAuth">
+        <ion-item>
+          <ion-input placeholder="Email"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input placeholder="password" type="password"></ion-input>
+        </ion-item>
+      </ion-list>
     </ion-content>
-    <ion-button @click="onSiginOut">Sign Out</ion-button>
-  </ion-page>
+    <ion-button v-if="isAuth" @click="onSiginOut">Sign Out</ion-button>
+    <ion-button v-else @click="onSignIn">Sign In</ion-button>
+  </container-screen>
 </template>
 
 <script lang="ts">
 import { IonButton, IonImg } from "@ionic/vue";
+import { createOutline } from "ionicons/icons";
 import {
   IonTitle,
   IonPage,
   IonHeader,
   IonToolbar,
   IonContent,
+  IonIcon,
+  IonList,
+  IonItem,
+  IonInput,
+  useIonRouter,
 } from "@ionic/vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { auth } from "@/utils/firebase";
-import { onAuthStateChanged } from "@firebase/auth";
 import { useRouter } from "vue-router";
+import { HeaderCustom, ContainerScreen } from "@/components";
 
 export default {
   components: {
-    IonTitle,
-    IonPage,
-    IonHeader,
-    IonToolbar,
+    ContainerScreen,
+    HeaderCustom,
     IonContent,
     IonButton,
-    IonImg,
+    // IonImg,
+    // IonIcon
+    IonList,
+    IonItem,
+    IonInput,
+  },
+  data() {
+    return {
+      createOutline,
+    };
   },
   setup() {
     const store = useStore();
     const router = useRouter();
-    computed(() => store.dispatch("authModules/isLogin"));
+    const ionRouter = useIonRouter();
+    // computed(() => store.dispatch("authModules/isLogin"));
     const onSiginOut = async () => {
       try {
         await store.dispatch("authModules/signOutUser");
@@ -57,19 +66,14 @@ export default {
         console.log(error.message);
       }
     };
-    // onAuthStateChanged(auth, (user) => {
-    //   if (user) {
-    //     const users = user;
-    //     console.log(users);
-    //     store.commit("authModules/SET_USER", user);
-    //   } else {
-    //     // User is signed out
-    //     // ...
-    //   }
-    // });
+
+    const onSignIn = () => {
+      ionRouter.navigate("/login");
+    };
 
     return {
       onSiginOut,
+      onSignIn,
       user: computed(() => store.state.authModules.user),
       isAuth: computed(() => store.state.authModules.isAuth),
     };
@@ -80,9 +84,9 @@ export default {
 <style scoped>
 .profile {
   display: flex;
-  width: 120px;
-  height: 120px;
-  border-radius: 60px;
+  width: 200px;
+  height: 200px;
+  border-radius: 200px;
   overflow: hidden;
 }
 </style>
