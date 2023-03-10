@@ -84,11 +84,9 @@ export default defineComponent({
     const store = useStore();
     const isChange = ref(false);
     store.dispatch("todoModule/fetchTodos").then(() => countCompleted());
+    computed(() => store.dispatch("todoModule/authAction"));
     const todos = computed(() => store.getters["todoModule/getTodos"]);
     const isLoading = computed(() => store.getters["todoModule/isLoading"]);
-    const user = computed(() => store.getters["authModules/user"]);
-    console.log(user.value);
-    // console.log(isLoading.value);
 
     const counter = ref({
       counterCompleted: 0,
@@ -161,7 +159,6 @@ export default defineComponent({
         todos.value.isCompleted !== todos.value.isCompleted ||
         todos.value.title !== todos.value.title
       ) {
-        // computed(() => store.getters["todoModule/getTodos"]);
         store.getters["todoModule/getTodos"];
         onMounted(() => store.dispatch("todoModule/fetchTodos"));
       }
@@ -181,6 +178,7 @@ export default defineComponent({
       handleEdit,
       handleTick,
       handleRefresh,
+      user: computed(() => store.state.authModules.user),
     };
   },
 });
