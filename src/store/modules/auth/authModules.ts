@@ -1,17 +1,18 @@
 import {
   createUserWithEmailAndPassword,
-  getAuth,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
 } from "firebase/auth";
-import { auth, firebase, provider } from "@/utils/firebase";
+import { auth, provider } from "@/utils/firebase";
 import { USERS } from "@/views/auth/auth.interface";
+import store from "@/store/store";
+import { LoadingSpinner } from "@/components";
 
 const state = {
-  user: {
-    isAuth: false,
-    data: null,
-  },
+  user: null,
+  isAuth: false,
 };
 
 const getters = {
@@ -22,29 +23,32 @@ const getters = {
 
 const actions = {
   async register(context: any, user: USERS) {
+    await LoadingSpinner.present();
     const response = await createUserWithEmailAndPassword(
       auth,
       user.email,
       user.password
     );
     if (response) {
-      context.commit("SET_USERS", response.user);
+      context.commit("SET_USER", response.user);
     } else {
       throw new Error("Unable to register");
     }
+    await LoadingSpinner.dismiss();
   },
   async signIn(context: any, user: USERS) {
+    await LoadingSpinner.present();
     const response = await signInWithEmailAndPassword(
       auth,
       user.email,
       user.password
     );
     if (response) {
-      context.commit("SET_USER_LOGIN", response.user);
-      context.commit("SET_LOGGED_IN", true);
+      context.commit("SET_USER", response.user);
     } else {
       throw new Error("login failed");
     }
+    LoadingSpinner.dismiss();
   },
 
   async signInWithGoogle(context: any) {
@@ -57,21 +61,33 @@ const actions = {
       });
   },
 
-  async fetchUserById(context: any, userId: String) {
-    console.log("getUser");
+  async signOutUser(context: any, payload: boolean) {
+    await LoadingSpinner.present();
+    try {
+      await signOut(auth);
+      context.commit("SET_USER", false);
+    } catch (error) {
+      console.log(error);
+    }
+    await LoadingSpinner.dismiss();
   },
 };
 
+// onAuthStateChnage
+const isLogin = onAuthStateChanged(auth, (user: any) => {
+  store.commit("authModules/SET_IS_AUTH", true);
+  store.commit("authModules/SET_USER", user);
+  isLogin();
+});
+
 const mutations = {
-  SET_LOGGED_IN(state: any, val: boolean) {
-    state.user.isAuth = val;
-    console.log(val);
+  SET_USER(state: any, payload: any) {
+    state.user = payload;
+    console.log("user mutatation", payload);
   },
-  SET_USER_LOGIN(state: any, data: any) {
-    state.user.data = data;
-  },
-  SET_USER_SIGNIN(state: any, data: USERS) {
-    state.user.data = data;
+  SET_IS_AUTH(state: any, payload: boolean) {
+    state.isAuth = payload;
+    console.log(payload);
   },
 };
 

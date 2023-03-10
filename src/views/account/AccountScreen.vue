@@ -13,8 +13,10 @@
         ></ion-img>
       </div>
       <div class="example-content">Account Screen</div>
+      {{ isAuth }}
+      {{ user }}
     </ion-content>
-    <ion-button>Sign Out</ion-button>
+    <ion-button @click="onSiginOut">Sign Out</ion-button>
   </ion-page>
 </template>
 
@@ -29,6 +31,10 @@ import {
 } from "@ionic/vue";
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { auth } from "@/utils/firebase";
+import { onAuthStateChanged } from "@firebase/auth";
+import { useRouter } from "vue-router";
+
 export default {
   components: {
     IonTitle,
@@ -41,11 +47,32 @@ export default {
   },
   setup() {
     const store = useStore();
+    const router = useRouter();
+    computed(() => store.dispatch("authModules/isLogin"));
+    const onSiginOut = async () => {
+      try {
+        await store.dispatch("authModules/signOutUser");
+        router.replace("/");
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    };
+    // onAuthStateChanged(auth, (user) => {
+    //   if (user) {
+    //     const users = user;
+    //     console.log(users);
+    //     store.commit("authModules/SET_USER", user);
+    //   } else {
+    //     // User is signed out
+    //     // ...
+    //   }
+    // });
 
-    computed(() => store.dispatch("authModules/fetchUser"));
-    const userInfo = computed(() => store.getters["authModules/user"]);
-    console.log(userInfo.value)
-    return { userInfo };
+    return {
+      onSiginOut,
+      user: computed(() => store.state.authModules.user),
+      isAuth: computed(() => store.state.authModules.isAuth),
+    };
   },
 };
 </script>
