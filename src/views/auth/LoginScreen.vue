@@ -39,8 +39,7 @@ import {
   IonButton,
   useIonRouter,
 } from "@ionic/vue";
-import { Toast } from "@capacitor/toast";
-import { USERS } from "./auth.interface";
+import type { USERS } from "@/store/modules/auth/user.interface";
 import { ref } from "vue";
 export default {
   components: {

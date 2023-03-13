@@ -14,7 +14,7 @@
           ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input placeholder="name" v-model="user.name"></ion-input>
+          <ion-input placeholder="name" v-model="user.displayName"></ion-input>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -37,10 +37,9 @@ import {
   IonItem,
   useIonRouter,
 } from "@ionic/vue";
-import type { USERS } from "./auth.interface";
+import type { USERS } from "@/store/modules/auth/user.interface";
 import { HeaderCustom, ContainerScreen } from "@/components";
 import { useStore } from "vuex";
-import { Toast } from "@capacitor/toast";
 
 export default {
   components: {
@@ -56,7 +55,7 @@ export default {
     const store = useStore();
     const ionRouter = useIonRouter();
     const user = ref<USERS>({
-      name: "",
+      displayName: "",
       email: "",
       password: "",
     });
