@@ -1,40 +1,86 @@
 <template>
   <container-screen>
-    <header-custom title="Profile" :right-icon="createOutline" />
+    <header-custom
+      v-if="disabled == true"
+      title="My Account"
+      :right-icon="createOutline"
+      :onclick="onEditUser"
+    />
+    <header-custom
+      v-else
+      title="My Account"
+      :right-icon="checkmarkOutline"
+      :onclick="onUpdate"
+    />
+
     <ion-content :scroll-events="false">
-      <ion-list v-if="isAuth">
+      <ion-list class="content" v-if="isAuth">
+        <ion-avatar class="profile">
+          <img :src="users.photoURL ? users.photoURL : imageProfile" />
+        </ion-avatar>
+        <ion-buttons slot="end">
+          <IonButton @click="presentActionSheet">
+            <ion-icon :icon="cameraOutline" size="medium" />
+          </IonButton>
+        </ion-buttons>
+
+        <!-- <ion-grid>
+          <ion-row>
+            <ion-col size="6" v-for="(photo, index) in photos" :key="index">
+              <ion-img :src="photo.webviewPath"></ion-img>
+            </ion-col>
+          </ion-row>
+        </ion-grid> -->
         <ion-item>
-          <ion-input placeholder="Email"></ion-input>
+          <ion-input
+            placeholder="Name"
+            :disabled="disabled"
+            v-model="userInfo.displayName"
+          ></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input placeholder="password" type="password"></ion-input>
+          <ion-input
+            placeholder="Email"
+            :disabled="disabled"
+            v-model="users.email"
+          ></ion-input>
         </ion-item>
       </ion-list>
     </ion-content>
-    <ion-button v-if="isAuth" @click="onSiginOut">Sign Out</ion-button>
-    <ion-button v-else @click="onSignIn">Sign In</ion-button>
+    <ion-button> Change Password</ion-button>
+    <ion-button @click="onSiginOut">Sign Out</ion-button>
   </container-screen>
 </template>
 
 <script lang="ts">
-import { IonButton, IonImg } from "@ionic/vue";
-import { createOutline } from "ionicons/icons";
+import { createOutline, checkmarkOutline, cameraOutline } from "ionicons/icons";
 import {
-  IonTitle,
-  IonPage,
-  IonHeader,
-  IonToolbar,
   IonContent,
   IonIcon,
   IonList,
   IonItem,
   IonInput,
   useIonRouter,
+  IonButton,
+  IonAvatar,
+  IonButtons,
+  IonTitle,
+  actionSheetController,
+  //
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonImg,
 } from "@ionic/vue";
-import { computed } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { HeaderCustom, ContainerScreen } from "@/components";
+import { HeaderCustom, ContainerScreen, LoadingSpinner } from "@/components";
+import { updateProfile, User } from "@firebase/auth";
+import { auth } from "@/utils/firebase";
+
+// Capacitor Open Camera
+import { usePhotoGallery } from "@/views/account/components/usePhotoGallery";
 
 export default {
   components: {
@@ -42,22 +88,46 @@ export default {
     HeaderCustom,
     IonContent,
     IonButton,
-    // IonImg,
-    // IonIcon
     IonList,
     IonItem,
     IonInput,
+    IonAvatar,
+    // IonTitle
+    IonButtons,
+    IonIcon,
+    //
+    // IonGrid,
+    // IonRow,
+    // IonCol,
+    // IonImg,
   },
   data() {
     return {
       createOutline,
+      checkmarkOutline,
+      cameraOutline,
     };
   },
   setup() {
     const store = useStore();
     const router = useRouter();
-    const ionRouter = useIonRouter();
-    // computed(() => store.dispatch("authModules/isLogin"));
+    const imageProfile = "https://ionicframework.com/docs/img/demos/avatar.svg";
+    const disabled = ref(true);
+    const users = computed(function () {
+      return store.state.authModules.user;
+    });
+    const userInfo = ref({
+      displayName: "",
+      photoURL: "https://images.app.goo.gl/n4te2vmu7jMQw7pHA",
+    });
+    const result = ref("");
+    const { takePhoto, photos } = usePhotoGallery();
+
+    watchEffect(() => {
+      userInfo.value.displayName = users.value.displayName;
+      userInfo.value.photoURL = users.value.photoURL;
+    });
+
     const onSiginOut = async () => {
       try {
         await store.dispatch("authModules/signOutUser");
@@ -67,15 +137,54 @@ export default {
       }
     };
 
-    const onSignIn = () => {
-      ionRouter.navigate("/login");
+    const onEditUser = () => {
+      disabled.value = false;
+      console.log("Edit");
+    };
+
+    const onUpdate = async () => {
+      await LoadingSpinner.present();
+      disabled.value = true;
+      updateProfile(auth.currentUser as User, {
+        displayName: userInfo.value.displayName,
+        photoURL: userInfo.value.photoURL,
+      });
+      await LoadingSpinner.dismiss();
+    };
+
+    const presentActionSheet = async () => {
+      const actionSheet = await actionSheetController.create({
+        buttons: [
+          {
+            text: "Take Photo",
+            handler: takePhoto,
+          },
+          {
+            text: "Upload Photo",
+          },
+        ],
+      });
+
+      await actionSheet.present();
+
+      const res = await actionSheet.onDidDismiss();
+      result.value = JSON.stringify(res, null, 2);
     };
 
     return {
       onSiginOut,
-      onSignIn,
-      user: computed(() => store.state.authModules.user),
+      onEditUser,
+      onUpdate,
+      presentActionSheet,
+      result,
+      userInfo,
+      disabled,
+      imageProfile,
+      users,
+      takePhoto,
+      photos,
       isAuth: computed(() => store.state.authModules.isAuth),
+      // user: computed(() => store.state.authModules.user),
     };
   },
 };
@@ -84,9 +193,16 @@ export default {
 <style scoped>
 .profile {
   display: flex;
-  width: 200px;
-  height: 200px;
+  width: 120px;
+  height: 120px;
   border-radius: 200px;
   overflow: hidden;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>

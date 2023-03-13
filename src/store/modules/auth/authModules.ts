@@ -4,9 +4,11 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  updateProfile,
+  User,
 } from "firebase/auth";
 import { auth, provider } from "@/utils/firebase";
-import { USERS } from "@/views/auth/auth.interface";
+import type { USERS } from "@/store/modules/auth/user.interface";
 import store from "@/store/store";
 import { LoadingSpinner } from "@/components";
 
@@ -31,6 +33,9 @@ const actions = {
     );
     if (response) {
       context.commit("SET_USER", response.user);
+      updateProfile(auth.currentUser as User, {
+        displayName: user.displayName,
+      });
     } else {
       throw new Error("Unable to register");
     }
@@ -73,6 +78,22 @@ const actions = {
     }
     await LoadingSpinner.dismiss();
   },
+
+  // async updateUser(context: any, user: USERS) {
+  //   console.log("Update User", user);
+  //   await LoadingSpinner.present();
+  //   await updateProfile(auth.currentUser as User, {
+  //     displayName: user.displayName,
+  //     photoURL: user.photoURL,
+  //   })
+  //     .then(() => {
+  //       context.commit("SET_USER", user);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  //   await LoadingSpinner.dismiss();
+  // },
 };
 
 // onAuthStateChnage
