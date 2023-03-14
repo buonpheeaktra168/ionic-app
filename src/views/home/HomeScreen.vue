@@ -49,15 +49,15 @@ import {
   IonRefresher,
   IonRefresherContent,
 } from "@ionic/vue";
-import { HeaderCustom } from "@/components";
+import { HeaderCustom } from "@/shared/components/base/app-components";
 import {
   PlusButton,
   TodoCard,
   AddModal,
   SheetModal,
   CardView,
-} from "@/views/home/components";
-import type { Todos } from "@/store/modules/todoModule/todo.interface";
+} from "@/shared/components/common/home";
+import type { Todos } from "@/shared/store/modules/todoModule/todo.interface";
 
 export default defineComponent({
   components: {

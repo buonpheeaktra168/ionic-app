@@ -8,9 +8,9 @@ import {
   User,
 } from "firebase/auth";
 import { auth, provider } from "@/utils/firebase";
-import type { USERS } from "@/store/modules/auth/user.interface";
-import store from "@/store/store";
-import { LoadingSpinner } from "@/components";
+import type { USERS } from "./user.interface";
+import store from "@/shared/store/store";
+import { LoadingSpinner } from "@/shared/components/base/app-components";
 
 const state = {
   user: null,
@@ -47,7 +47,10 @@ const actions = {
       auth,
       user.email,
       user.password
-    );
+    ).catch((error) => {
+      console.log(error);
+      LoadingSpinner.dismiss();
+    });
     if (response) {
       context.commit("SET_USER", response.user);
     } else {
@@ -60,7 +63,7 @@ const actions = {
   async signInWithGoogle(context: any) {
     const res = await signInWithPopup(auth, provider)
       .then((result) => {
-        console.log(result);
+        context.commit("SET_USER", result);
       })
       .catch((error) => {
         console.log(error.message);

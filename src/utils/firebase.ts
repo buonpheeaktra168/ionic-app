@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, updateProfile  } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, updateProfile } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_API_KKEY,
@@ -10,8 +11,9 @@ const firebaseConfig = {
   appId: process.env.VUE_APP_APP_ID,
 };
 
-const firebase = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
+const db = getFirestore(app);
 
-export { firebase, auth, provider, updateProfile };
+export { auth, provider, updateProfile, db };

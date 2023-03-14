@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Todos } from "@/store/modules/todoModule/todo.interface";
+import { Todos } from "@/shared/store/modules/todoModule/todo.interface";
 import { statusValue } from "./OptionValue";
 import {
   IonContent,

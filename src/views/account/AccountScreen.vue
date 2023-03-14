@@ -16,21 +16,13 @@
     <ion-content :scroll-events="false">
       <ion-list class="content" v-if="isAuth">
         <ion-avatar class="profile">
-          <img :src="users.photoURL ? users.photoURL : imageProfile" />
+          <img :src="users.photoURL ? users.photoURL : profile" />
         </ion-avatar>
         <ion-buttons slot="end">
           <IonButton @click="presentActionSheet">
             <ion-icon :icon="cameraOutline" size="medium" />
           </IonButton>
         </ion-buttons>
-
-        <!-- <ion-grid>
-          <ion-row>
-            <ion-col size="6" v-for="(photo, index) in photos" :key="index">
-              <ion-img :src="photo.webviewPath"></ion-img>
-            </ion-col>
-          </ion-row>
-        </ion-grid> -->
         <ion-item>
           <ion-input
             placeholder="Name"
@@ -47,7 +39,7 @@
         </ion-item>
       </ion-list>
     </ion-content>
-    <ion-button> Change Password</ion-button>
+    <!-- <ion-button> Change Password</ion-button> -->
     <ion-button @click="onSiginOut">Sign Out</ion-button>
   </container-screen>
 </template>
@@ -75,12 +67,17 @@ import {
 import { computed, ref, watchEffect } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { HeaderCustom, ContainerScreen, LoadingSpinner } from "@/components";
+import {
+  HeaderCustom,
+  ContainerScreen,
+  LoadingSpinner,
+} from "@/shared/components/base/app-components";
 import { updateProfile, User } from "@firebase/auth";
 import { auth } from "@/utils/firebase";
 
 // Capacitor Open Camera
-import { usePhotoGallery } from "@/views/account/components/usePhotoGallery";
+import { usePhotoGallery } from "@/shared/components/common/account/usePhotoGallery";
+import { profile } from "@/shared/components/base/icons/Icons";
 
 export default {
   components: {
@@ -111,7 +108,6 @@ export default {
   setup() {
     const store = useStore();
     const router = useRouter();
-    const imageProfile = "https://ionicframework.com/docs/img/demos/avatar.svg";
     const disabled = ref(true);
     const users = computed(function () {
       return store.state.authModules.user;
@@ -179,10 +175,10 @@ export default {
       result,
       userInfo,
       disabled,
-      imageProfile,
       users,
       takePhoto,
       photos,
+      profile,
       isAuth: computed(() => store.state.authModules.isAuth),
       // user: computed(() => store.state.authModules.user),
     };
