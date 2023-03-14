@@ -53,6 +53,7 @@ const actions = {
     });
     if (response) {
       context.commit("SET_USER", response.user);
+      store.commit("authModules/SET_IS_AUTH", true);
     } else {
       LoadingSpinner.dismiss();
       throw new Error("login failed");
@@ -63,7 +64,11 @@ const actions = {
   async signInWithGoogle(context: any) {
     const res = await signInWithPopup(auth, provider)
       .then((result) => {
-        context.commit("SET_USER", result);
+        if (result.user) {
+          context.commit("SET_USER", result);
+        } else {
+          console.log("Error");
+        }
       })
       .catch((error) => {
         console.log(error.message);
@@ -101,15 +106,18 @@ const actions = {
 
 // onAuthStateChnage
 const isLogin = onAuthStateChanged(auth, (user: any) => {
-  store.commit("authModules/SET_IS_AUTH", true);
-  store.commit("authModules/SET_USER", user);
+  if (user) {
+    store.commit("authModules/SET_IS_AUTH", true);
+    store.commit("authModules/SET_USER", user);
+  } else {
+    store.commit("authModules/SET_IS_AUTH", false);
+  }
   isLogin();
 });
 
 const mutations = {
-  SET_USER(state: any, payload: any) {
+  SET_USER(state: any, payload: User) {
     state.user = payload;
-    console.log("user mutatation", payload);
   },
   SET_IS_AUTH(state: any, payload: boolean) {
     state.isAuth = payload;

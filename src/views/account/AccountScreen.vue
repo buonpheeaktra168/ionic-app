@@ -1,42 +1,42 @@
 <template>
   <container-screen>
     <header-custom
+      class="header-screen"
       v-if="disabled == true"
-      title="My Account"
+      title="Account"
       :right-icon="createOutline"
       :onclick="onEditUser"
     />
     <header-custom
+      class="header-screen"
       v-else
-      title="My Account"
+      title="Account"
       :right-icon="checkmarkOutline"
       :onclick="onUpdate"
     />
 
     <ion-content :scroll-events="false">
       <ion-list class="content" v-if="isAuth">
-        <ion-avatar class="profile">
-          <img :src="users.photoURL ? users.photoURL : profile" />
-        </ion-avatar>
-        <ion-buttons slot="end">
-          <IonButton @click="presentActionSheet">
-            <ion-icon :icon="cameraOutline" size="medium" />
-          </IonButton>
-        </ion-buttons>
-        <ion-item>
-          <ion-input
-            placeholder="Name"
-            :disabled="disabled"
-            v-model="userInfo.displayName"
-          ></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-input
-            placeholder="Email"
-            :disabled="disabled"
-            v-model="users.email"
-          ></ion-input>
-        </ion-item>
+        <div class="profile-container">
+          <div>
+          <ion-avatar class="profile">
+            <img :src="users.photoURL ? users.photoURL : profile" />
+          </ion-avatar>
+          <ion-buttons slot="end" v-if="disabled == false">
+            <IonButton class="camera-icon" @click="presentActionSheet">
+              <ion-icon :icon="cameraOutline" size="medium" />
+            </IonButton>
+          </ion-buttons>
+        </div>
+        <div>
+          <p>Email: {{ users.email }}</p>
+        </div>
+        </div>
+        <InputText
+          placeholder="Name"
+          v-model:value="userInfo.displayName"
+          :disabled="disabled"
+        />
       </ion-list>
     </ion-content>
     <!-- <ion-button> Change Password</ion-button> -->
@@ -71,6 +71,7 @@ import {
   HeaderCustom,
   ContainerScreen,
   LoadingSpinner,
+  InputText,
 } from "@/shared/components/base/app-components";
 import { updateProfile, User } from "@firebase/auth";
 import { auth } from "@/utils/firebase";
@@ -86,8 +87,8 @@ export default {
     IonContent,
     IonButton,
     IonList,
-    IonItem,
-    IonInput,
+    // IonItem,
+    // IonInput,
     IonAvatar,
     // IonTitle
     IonButtons,
@@ -97,6 +98,7 @@ export default {
     // IonRow,
     // IonCol,
     // IonImg,
+    InputText,
   },
   data() {
     return {
@@ -114,7 +116,7 @@ export default {
     });
     const userInfo = ref({
       displayName: "",
-      photoURL: "https://images.app.goo.gl/n4te2vmu7jMQw7pHA",
+      photoURL: "",
     });
     const result = ref("");
     const { takePhoto, photos } = usePhotoGallery();
@@ -187,12 +189,37 @@ export default {
 </script>
 
 <style scoped>
+.header-screen {
+  display: flex;
+  background-color: rgb(43, 142, 255);
+  color: blueviolet;
+  overflow: hidden;
+}
 .profile {
   display: flex;
-  width: 120px;
-  height: 120px;
-  border-radius: 200px;
+  width: 60px;
+  height: 60px;
   overflow: hidden;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+.profile-container {
+  display: flex;
+  width: 95%;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px;
+  border-radius: 12px;
+  margin-top: 12px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
+.camera-icon {
+  position: absolute;
+  margin-left: 20px;
+  margin-bottom: 8px;
 }
 
 .content {

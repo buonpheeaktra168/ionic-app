@@ -3,6 +3,9 @@
     <HeaderCustom default-back="/login" title="Sign Up" />
     <ion-content class="content">
       <ion-list>
+        <ion-avatar class="profile">
+          <img :src="profile" />
+        </ion-avatar>
         <ion-item>
           <ion-input placeholder="email" v-model="user.email"></ion-input>
         </ion-item>
@@ -21,7 +24,6 @@
     <ion-button @click="signUp" style="width: 100vw; height: 40px"
       >Sign Up</ion-button
     >
-    
   </ContainerScreen>
 </template>
 
@@ -34,10 +36,15 @@ import {
   IonInput,
   IonItem,
   useIonRouter,
+  IonAvatar
 } from "@ionic/vue";
 import type { USERS } from "@/shared/store/modules/auth/user.interface";
-import { HeaderCustom, ContainerScreen } from "@/shared/components/base/app-components";
+import {
+  HeaderCustom,
+  ContainerScreen,
+} from "@/shared/components/base/app-components";
 import { useStore } from "vuex";
+import { profile } from "@/shared/components/base/icons/Icons";
 
 export default {
   components: {
@@ -48,6 +55,7 @@ export default {
     IonList,
     IonInput,
     IonItem,
+    IonAvatar
   },
   setup() {
     const store = useStore();
@@ -79,9 +87,7 @@ export default {
       }
     };
 
-    
-
-    return { user, errMsg, signUp };
+    return { user, errMsg, profile, signUp };
   },
 };
 </script>

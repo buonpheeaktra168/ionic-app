@@ -2,38 +2,42 @@
   <container-screen>
     <header-custom title="Login" />
     <ion-content class="content">
-      <ion-avatar class="profile">
-        <img :src="profile" />
-      </ion-avatar>
       <ion-list>
-        <ion-item>
-          <ion-input placeholder="Email" v-model="user.email"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-input
-            placeholder="password"
-            type="password"
-            v-model="user.password"
-          ></ion-input>
-        </ion-item>
+        <ion-avatar class="profile">
+          <img :src="profile" />
+        </ion-avatar>
+        <input-text placeholder="Email" v-model:value="user.email" />
+        <input-text
+          placeholder="Password"
+          type="password"
+          v-model:value="user.password"
+        />
       </ion-list>
-      <!-- <p v-if="errMsg">{{ errMsg }}</p> -->
+      
     </ion-content>
+    <ion-buttons slot="end">
+        <IonButton @click="signUpGoogle">
+          <ion-icon :icon="logoGoogle" size="medium"/>
+        </IonButton>
+      </ion-buttons>
     <ion-button @click="onLogin" style="width: 100vw; height: 40px"
       >SignIn</ion-button
     >
     <ion-button @click="signUpWithEmail" style="width: 100vw; height: 40px"
       >SigUp with email</ion-button
     >
-    <ion-button @click="signUpGoogle" style="width: 100vw; height: 40px"
+    <!-- <ion-button @click="signUpGoogle" style="width: 100vw; height: 40px"
       >SiginIn Google</ion-button
-    >
+    > -->
   </container-screen>
 </template>
 
 <script lang="ts">
 // import { useRouter } from "vue-router";
-import { HeaderCustom,ContainerScreen } from "@/shared/components/base/app-components";
+import {
+  HeaderCustom,
+  ContainerScreen,
+} from "@/shared/components/base/app-components";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import {
@@ -44,20 +48,30 @@ import {
   IonButton,
   useIonRouter,
   IonAvatar,
+  IonButtons,
+  IonIcon
 } from "@ionic/vue";
 import type { USERS } from "@/shared/store/modules/auth/user.interface";
 import { ref } from "vue";
 import { profile } from "@/shared/components/base/icons/Icons";
+import { InputText } from "@/shared/components/base/app-components";
+import { logoGoogle } from "ionicons/icons";
 export default {
   components: {
     IonList,
-    IonInput,
     IonContent,
-    IonItem,
     IonButton,
     HeaderCustom,
     ContainerScreen,
     IonAvatar,
+    InputText,
+    IonButtons,
+    IonIcon
+  },
+  data() {
+    return {
+      logoGoogle,
+    };
   },
   setup() {
     const ionRouter = useIonRouter();
@@ -101,6 +115,7 @@ export default {
     };
     const signUpGoogle = () => {
       store.dispatch("authModules/signInWithGoogle");
+      router.replace("/home");
     };
     return {
       user,
@@ -124,6 +139,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  scroll-behavior: none;
+  flex-direction: column;
 }
 </style>

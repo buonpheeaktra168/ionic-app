@@ -3,18 +3,7 @@
     <HeaderCustom title="Home" :right-icon="search" search-id="search-modal" />
     <ion-content color="medium" :force-overscroll="true">
       <ion-refresher slot="fixed" @ionRefresh="handleRefresh">
-        <!-- <ion-refresher-content></ion-refresher-content> -->
       </ion-refresher>
-      <!-- <div class="card">
-        <CardView
-          :title="counter.counterCompleted.toString()"
-          subtitle="Completed"
-        />
-        <CardView
-          :title="counter.counterIncompleted.toString()"
-          subtitle="InCompleted"
-        />
-      </div> -->
       <TodoCard
         v-for="(todo, index) in todos"
         :key="index"
