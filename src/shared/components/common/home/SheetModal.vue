@@ -37,7 +37,7 @@
 import { IonModal, IonContent, IonSearchbar, IonLabel } from "@ionic/vue";
 import { search } from "ionicons/icons";
 import { defineComponent, ref, watchEffect } from "vue";
-import { TodoCard, PlusButton } from "@/views/home/components";
+import { TodoCard, PlusButton } from "@/shared/components/common/home";
 import { useStore } from "vuex";
 import { computed } from "vue";
 

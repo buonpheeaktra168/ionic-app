@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import store from "./store/store";
+import store from "@/shared/store/store";
 
 import { IonicVue } from "@ionic/vue";
 

@@ -21,9 +21,7 @@
     <ion-button @click="signUp" style="width: 100vw; height: 40px"
       >Sign Up</ion-button
     >
-    <ion-button @click="signUpGoogle" style="width: 100vw; height: 40px"
-      >Sign Up Google</ion-button
-    >
+    
   </ContainerScreen>
 </template>
 
@@ -37,8 +35,8 @@ import {
   IonItem,
   useIonRouter,
 } from "@ionic/vue";
-import type { USERS } from "@/store/modules/auth/user.interface";
-import { HeaderCustom, ContainerScreen } from "@/components";
+import type { USERS } from "@/shared/store/modules/auth/user.interface";
+import { HeaderCustom, ContainerScreen } from "@/shared/components/base/app-components";
 import { useStore } from "vuex";
 
 export default {
@@ -81,11 +79,9 @@ export default {
       }
     };
 
-    const signUpGoogle = () => {
-      store.dispatch("authModules/signInWithGoogle");
-    };
+    
 
-    return { user, errMsg, signUp, signUpGoogle };
+    return { user, errMsg, signUp };
   },
 };
 </script>

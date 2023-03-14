@@ -31,17 +31,13 @@
 </template>
 
 <script lang="ts">
-// import HeaderCustom from "@/components/HeaderCustom.vue";
-// import ContainerScreen from "@/components/ContainerScreen.vue";
 import {
   IonMenu,
   IonToolbar,
   IonTitle,
   IonHeader,
   IonButton,
-//   IonList,
-//   IonItem,
-//   IonLabel,
+
 } from "@ionic/vue";
 export default {
   name: "LoginScreen",
